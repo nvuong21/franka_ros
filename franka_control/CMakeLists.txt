@@ -80,27 +80,27 @@ target_include_directories(franka_control_node SYSTEM PUBLIC
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(franka_combined_control_node
-    src/franka_combined_control_node.cpp
-)
+# add_executable(franka_combined_control_node
+#     src/franka_combined_control_node.cpp
+# )
 
-add_dependencies(franka_combined_control_node
-    ${catkin_EXPORTED_TARGETS}
-)
+# add_dependencies(franka_combined_control_node
+#     ${catkin_EXPORTED_TARGETS}
+# )
 
-target_link_libraries(franka_combined_control_node
-  ${catkin_LIBRARIES}
-)
+# target_link_libraries(franka_combined_control_node
+#   ${catkin_LIBRARIES}
+# )
 
-target_include_directories(franka_combined_control_node SYSTEM PUBLIC
-  ${catkin_INCLUDE_DIRS}
-)
+# target_include_directories(franka_combined_control_node SYSTEM PUBLIC
+#   ${catkin_INCLUDE_DIRS}
+# )
 
 
 ## Installation
 install(TARGETS franka_state_controller
                 franka_control_node
-                franka_combined_control_node
+                # franka_combined_control_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

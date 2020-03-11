@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(catkin REQUIRED COMPONENTS
   actionlib
   controller_interface
-  combined_robot_hw
+  # combined_robot_hw
   hardware_interface
   joint_limits_interface
   roscpp
@@ -26,7 +26,7 @@ catkin_package(
     actionlib_msgs
     actionlib
     controller_interface
-    combined_robot_hw
+    # combined_robot_hw
     hardware_interface
     joint_limits_interface
     roscpp
@@ -40,7 +40,7 @@ add_library(franka_hw
   src/control_mode.cpp
   src/franka_hw.cpp
   src/franka_combinable_hw.cpp
-  src/franka_combined_hw.cpp
+  # src/franka_combined_hw.cpp
   src/resource_helpers.cpp
   src/trigger_rate.cpp
 )
