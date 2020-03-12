@@ -137,6 +137,40 @@ bool FrankaHW::initParameters(ros::NodeHandle& root_nh, ros::NodeHandle& robot_h
     return false;
   }
 
+  // Get impedance paramters from the parameter server
+  std::vector<double> joint_stiffness;
+  std::vector<double> joint_impedance_default{3000, 3000, 3000, 2500, 2500, 2000, 2000};
+  if (!robot_hw_nh.getParam("joint_impedance", joint_stiffness) ||
+      joint_stiffness.size() != joint_impedance_default.size()) {
+    std::string message;
+    for (const double& values : joint_impedance_default) {
+      message += std::to_string(values);
+      message += " ";
+    }
+    ROS_INFO("No parameter joint_impedance found, using default values: %s", message.c_str());
+    std::copy(joint_impedance_default.begin(), joint_impedance_default.end(),
+              joint_impedance_.begin());
+  }
+  std::copy(joint_stiffness.begin(), joint_stiffness.end(),
+            joint_impedance_.begin());
+
+
+  std::vector<double> cartesian_stiffness;
+  std::vector<double> cartesian_impedance_default{3000, 3000, 3000, 300, 300, 300};
+  if (!robot_hw_nh.getParam("cartesian_impedance", cartesian_stiffness) ||
+      cartesian_stiffness.size() != cartesian_impedance_default.size()) {
+    std::string message;
+    for (const double& values : cartesian_impedance_default) {
+      message += std::to_string(values);
+      message += " ";
+    }
+    ROS_INFO("No parameter cartesian_impedance found, using default values: %s", message.c_str());
+    std::copy(cartesian_impedance_default.begin(), cartesian_impedance_default.end(),
+              cartesian_impedance_.begin());
+  }
+  std::copy(cartesian_stiffness.begin(), cartesian_stiffness.end(),
+            cartesian_impedance_.begin());
+
   // Get full collision behavior config from the parameter server.
   std::vector<double> thresholds =
       getCollisionThresholds("lower_torque_thresholds_acceleration", robot_hw_nh,
@@ -507,6 +541,7 @@ void FrankaHW::initROSInterfaces(ros::NodeHandle& /*robot_hw_nh*/) {
   setupFrankaModelInterface(robot_state_ros_);
 }
 
+// TODO add setJointImpedance and setCartesianImpedance here
 void FrankaHW::initRobot() {
   robot_ = std::make_unique<franka::Robot>(robot_ip_, realtime_config_);
   model_ = std::make_unique<franka::Model>(robot_->loadModel());
@@ -518,6 +553,10 @@ void FrankaHW::initRobot() {
                                collision_config_.upper_force_thresholds_acceleration,
                                collision_config_.lower_force_thresholds_nominal,
                                collision_config_.upper_force_thresholds_nominal);
+
+ // set imepdance parameters
+ robot_->setJointImpedance(joint_impedance_);
+ robot_->setCartesianImpedance(cartesian_impedance_);
   update(robot_->readOnce());
 }
 

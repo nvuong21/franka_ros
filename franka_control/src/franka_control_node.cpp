@@ -28,6 +28,10 @@ int main(int argc, char** argv) {
 
   franka::Robot& robot = franka_control.robot();
 
+  // set default impedance parameters
+  robot.setJointImpedance({{3000, 3000, 3000, 2500, 2500, 2000, 2000}});
+  robot.setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
+
   std::atomic_bool has_error(false);
 
   ServiceContainer services;

@@ -461,6 +461,10 @@ class FrankaHW : public hardware_interface::RobotHW {
     std::array<double, 6> upper_force_thresholds_nominal;
   };
 
+  // add impedance parameters
+  std::array<double, 7> joint_impedance_;
+  std::array<double, 6> cartesian_impedance_;
+
   CollisionConfig collision_config_;
   hardware_interface::JointStateInterface joint_state_interface_{};
   FrankaStateInterface franka_state_interface_{};
