@@ -49,42 +49,75 @@ bool CartesianPoseExampleController::init(hardware_interface::RobotHW* robot_har
   try {
     auto state_handle = state_interface->getHandle(arm_id + "_robot");
 
-    std::array<double, 7> q_start{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
-    for (size_t i = 0; i < q_start.size(); i++) {
-      if (std::abs(state_handle.getRobotState().q_d[i] - q_start[i]) > 0.1) {
-        ROS_ERROR_STREAM(
-            "CartesianPoseExampleController: Robot is not in the expected starting position for "
-            "running this example. Run `roslaunch franka_example_controllers move_to_start.launch "
-            "robot_ip:=<robot-ip> load_gripper:=<has-attached-gripper>` first.");
-        return false;
-      }
-    }
+    // std::array<double, 7> q_start{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
+    // for (size_t i = 0; i < q_start.size(); i++) {
+    //   if (std::abs(state_handle.getRobotState().q_d[i] - q_start[i]) > 0.1) {
+    //     ROS_ERROR_STREAM(
+    //         "CartesianPoseExampleController: Robot is not in the expected starting position for "
+    //         "running this example. Run `roslaunch franka_example_controllers move_to_start.launch "
+    //         "robot_ip:=<robot-ip> load_gripper:=<has-attached-gripper>` first.");
+    //     return false;
+    //   }
+    // }
   } catch (const hardware_interface::HardwareInterfaceException& e) {
     ROS_ERROR_STREAM(
         "CartesianPoseExampleController: Exception getting state handle: " << e.what());
     return false;
   }
 
+  sub_run_control_ = node_handle.subscribe("command", 1,
+    &CartesianPoseExampleController::callback, this,
+    ros::TransportHints().reliable().tcpNoDelay());
+
   return true;
 }
 
 void CartesianPoseExampleController::starting(const ros::Time& /* time */) {
   initial_pose_ = cartesian_pose_handle_->getRobotState().O_T_EE_d;
-  elapsed_time_ = ros::Duration(0.0);
+  elapsed_time_ = 0.0;
+  run_controller_ = false;
 }
 
 void CartesianPoseExampleController::update(const ros::Time& /* time */,
                                             const ros::Duration& period) {
-  elapsed_time_ += period;
+  elapsed_time_ += period.toSec();
+  double delta_x{0.0};
+  double delta_z{0.0};
+  double delta_y{0.0};
 
-  double radius = 0.3;
-  double angle = M_PI / 4 * (1 - std::cos(M_PI / 5.0 * elapsed_time_.toSec()));
-  double delta_x = radius * std::sin(angle);
-  double delta_z = radius * (std::cos(angle) - 1);
+  if (run_controller_){
+    // impose response
+    // delta_x = 0.0005;
+    // delta_y = 0.0005;
+    // delta_z = 0.0005;
+
+    // linear response
+    // double dev = 0.01;
+    // double T = 5;
+    // if (elapsed_time_ > T) elapsed_time_ = T;
+    // delta_x = elapsed_time_ / T * dev;
+    // delta_y = elapsed_time_ / T * dev;
+    // delta_z = elapsed_time_ / T * dev;
+    //
+    // // trajectory tracking
+    double radius = 0.05;
+    double angle = M_PI / 4 * (1 - std::cos(M_PI / 5.0 * elapsed_time_));
+    delta_x = radius * std::sin(angle);
+    delta_y = radius * std::sin(angle);
+    delta_z = radius * (std::cos(angle) - 1);
+  }
+  else elapsed_time_ = 0;
+
   std::array<double, 16> new_pose = initial_pose_;
-  new_pose[12] -= delta_x;
-  new_pose[14] -= delta_z;
+  new_pose[12] = initial_pose_[12] + delta_x;
+  new_pose[13] = initial_pose_[13] + delta_y;
+  new_pose[14] = initial_pose_[14] + delta_z;
   cartesian_pose_handle_->setCommand(new_pose);
+}
+
+void CartesianPoseExampleController::callback(const std_msgs::Bool& msg){
+  ROS_INFO("Receive run command");
+  run_controller_ = true;
 }
 
 }  // namespace franka_example_controllers

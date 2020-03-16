@@ -40,16 +40,20 @@ bool JointPositionExampleController::init(hardware_interface::RobotHW* robot_har
     }
   }
 
-  std::array<double, 7> q_start{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
-  for (size_t i = 0; i < q_start.size(); i++) {
-    if (std::abs(position_joint_handles_[i].getPosition() - q_start[i]) > 0.1) {
-      ROS_ERROR_STREAM(
-          "JointPositionExampleController: Robot is not in the expected starting position for "
-          "running this example. Run `roslaunch franka_example_controllers move_to_start.launch "
-          "robot_ip:=<robot-ip> load_gripper:=<has-attached-gripper>` first.");
-      return false;
-    }
-  }
+  // std::array<double, 7> q_start{{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
+  // for (size_t i = 0; i < q_start.size(); i++) {
+  //   if (std::abs(position_joint_handles_[i].getPosition() - q_start[i]) > 0.1) {
+  //     ROS_ERROR_STREAM(
+  //         "JointPositionExampleController: Robot is not in the expected starting position for "
+  //         "running this example. Run `roslaunch franka_example_controllers move_to_start.launch "
+  //         "robot_ip:=<robot-ip> load_gripper:=<has-attached-gripper>` first.");
+  //     return false;
+  //   }
+  // }
+
+  sub_run_control_ = node_handle.subscribe("command", 1,
+    &JointPositionExampleController::callback, this,
+    ros::TransportHints().reliable().tcpNoDelay());
 
   return true;
 }
@@ -58,21 +62,57 @@ void JointPositionExampleController::starting(const ros::Time& /* time */) {
   for (size_t i = 0; i < 7; ++i) {
     initial_pose_[i] = position_joint_handles_[i].getPosition();
   }
-  elapsed_time_ = ros::Duration(0.0);
+  elapsed_time_ = 0.0;
+  run_controller_ = false;
 }
 
 void JointPositionExampleController::update(const ros::Time& /*time*/,
                                             const ros::Duration& period) {
-  elapsed_time_ += period;
+  elapsed_time_ += period.toSec();
+  double goal_dif = 0.1;
+  double delta_angle{0.0};
 
-  double delta_angle = M_PI / 16 * (1 - std::cos(M_PI / 5.0 * elapsed_time_.toSec())) * 0.2;
-  for (size_t i = 0; i < 7; ++i) {
-    if (i == 4) {
-      position_joint_handles_[i].setCommand(initial_pose_[i] - delta_angle);
-    } else {
-      position_joint_handles_[i].setCommand(initial_pose_[i] + delta_angle);
-    }
+  if (run_controller_) {
+
+    // step response
+    // delta_angle = goal_dif;
+    // for (size_t i = 0; i < 7; ++i) {
+    //   if (i == 0) {
+    //     position_joint_handles_[i].setCommand(initial_pose_[i] + goal_dif);
+    //   }
+    //   else if (i == 6){
+    //     position_joint_handles_[i].setCommand(initial_pose_[i] + goal_dif);
+    //   }
+    // }
+
+    // linear response
+    // double T = 4;
+    // if (elapsed_time_ > T) elapsed_time_ = T;
+    // delta_angle = elapsed_time_ / T * goal_dif;
+
+    // trajectory response
+    delta_angle = M_PI / 16 * (1 - std::cos(M_PI / 5.0 * elapsed_time_)) * 0.2;
+
   }
+  else {
+    delta_angle = 0.0;
+    elapsed_time_ = 0.0;
+  }
+  // position_joint_handles_[0].setCommand(initial_pose_[0]-delta_angle);
+
+  // for (size_t i = 0; i < 7; ++i) {
+  //   if (i == 2) {
+  //     position_joint_handles_[i].setCommand(initial_pose_[i] - delta_angle);
+  //   } else {
+  //     position_joint_handles_[i].setCommand(initial_pose_[i]+ delta_angle);
+  //   }
+  // }
+}
+
+void JointPositionExampleController::callback(const std_msgs::Bool& msg){
+  ROS_INFO("Receive running command");
+  run_controller_ = true;
+  // elapsed_time_ = 0;
 }
 
 }  // namespace franka_example_controllers

@@ -11,6 +11,7 @@
 #include <hardware_interface/robot_hw.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
+#include <std_msgs/Bool.h>
 
 namespace franka_example_controllers {
 
@@ -24,8 +25,11 @@ class JointPositionExampleController : public controller_interface::MultiInterfa
  private:
   hardware_interface::PositionJointInterface* position_joint_interface_;
   std::vector<hardware_interface::JointHandle> position_joint_handles_;
-  ros::Duration elapsed_time_;
+  double elapsed_time_;
   std::array<double, 7> initial_pose_{};
-};
 
+  ros::Subscriber sub_run_control_;
+  void callback(const std_msgs::Bool& msg);
+  bool run_controller_;
+};
 }  // namespace franka_example_controllers

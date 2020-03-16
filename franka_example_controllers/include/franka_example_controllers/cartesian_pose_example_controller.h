@@ -11,6 +11,7 @@
 #include <hardware_interface/robot_hw.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
+#include <std_msgs/Bool.h>
 
 #include <franka_hw/franka_cartesian_command_interface.h>
 
@@ -27,8 +28,14 @@ class CartesianPoseExampleController
  private:
   franka_hw::FrankaPoseCartesianInterface* cartesian_pose_interface_;
   std::unique_ptr<franka_hw::FrankaCartesianPoseHandle> cartesian_pose_handle_;
-  ros::Duration elapsed_time_;
+  double elapsed_time_;
   std::array<double, 16> initial_pose_{};
+
+  // subscriber
+  ros::Subscriber sub_run_control_;
+  void callback(const std_msgs::Bool& msg);
+  bool run_controller_;
+
 };
 
 }  // namespace franka_example_controllers
