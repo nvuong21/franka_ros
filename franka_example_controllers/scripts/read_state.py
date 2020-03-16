@@ -3,6 +3,8 @@ import json
 import rospy
 from franka_msgs.msg import FrankaState
 from std_msgs.msg import Bool
+from franka_example_controllers.msg import JointTorqueComparison
+
 
 class StateSaver:
     def __init__(self, controller_ns):
@@ -38,6 +40,16 @@ class StateSaver:
             "time"      : [],
         }
 
+        if "impedance" in controller_ns:
+            self._torque_compare_sub = rospy.Subscriber(
+                "/joint_impedance_example_controller/torque_comparison",
+                JointTorqueComparison, self._torque_compare_callback)
+
+            self._data["tau_error"] = []
+            self._data["tau_commanded"] = []
+            self._data["tau_measured"] = []
+            self._data["rms_error"] = []
+
     def _callback(self, msg):
         # check if self._data exists
         if "_data" in dir(self):
@@ -48,7 +60,7 @@ class StateSaver:
                 self._data["dq_d"].append(msg.dq_d)
                 self._data["ddq_d"].append(msg.ddq_d)
                 self._data["tau_J"].append(msg.tau_J)
-                self._data["tau_J_d"].append(msg.tau_J_d)                
+                self._data["tau_J_d"].append(msg.tau_J_d)
                 self._data["dtau_J"].append(msg.dtau_J)
                 self._data["K_F_ext_hat_K"].append(msg.K_F_ext_hat_K)
                 self._data["elbow"].append(msg.elbow)
@@ -61,6 +73,14 @@ class StateSaver:
                 self._data["O_T_EE_d"].append(msg.O_T_EE_d)
                 self._data["O_T_EE_c"].append(msg.O_T_EE_c)
                 self._data["time"].append(msg.time)
+
+    def _torque_compare_callback(self, msg):
+        if "_data" in dir(self):
+            if self._record:
+                self._data["tau_error"].append(msg.tau_error)
+                self._data["tau_commanded"].append(msg.tau_commanded)
+                self._data["tau_measured"].append(msg.tau_measured)
+                self._data["rms_error"].append(msg.root_mean_square_error)
 
     def save(self, save_dir):
         with open(save_dir, "w") as f:
@@ -92,6 +112,7 @@ if __name__ == "__main__":
     save_file = os.path.join(save_folder, "data.json")
     saver = StateSaver("/joint_position_example_controller/command")
     # saver = StateSaver("/cartesian_pose_example_controller/command")
+    saver = StateSaver("/joint_impedance_example_controller/command")
     saver.start_record_data()
     rospy.sleep(0.5)
     saver.start_controller()

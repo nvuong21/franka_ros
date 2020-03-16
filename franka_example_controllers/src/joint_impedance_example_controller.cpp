@@ -124,11 +124,16 @@ bool JointImpedanceExampleController::init(hardware_interface::RobotHW* robot_hw
 
   std::fill(dq_filtered_.begin(), dq_filtered_.end(), 0);
 
+  sub_run_control_ = node_handle.subscribe("command", 1,
+    &JointImpedanceExampleController::callback, this,
+    ros::TransportHints().reliable().tcpNoDelay());
+
   return true;
 }
 
 void JointImpedanceExampleController::starting(const ros::Time& /*time*/) {
   initial_pose_ = cartesian_pose_handle_->getRobotState().O_T_EE_d;
+  elapsed_time_ = 0;
 }
 
 void JointImpedanceExampleController::update(const ros::Time& /*time*/,
@@ -171,6 +176,34 @@ void JointImpedanceExampleController::update(const ros::Time& /*time*/,
   // 1000 * (1 / sampling_time).
   std::array<double, 7> tau_d_saturated = saturateTorqueRate(tau_d_calculated, robot_state.tau_J_d);
 
+  ////// sinusoidal trajecotry
+  // double mag = 0.1;
+  // double T = 5.0;
+  // elapsed_time_ += period.toSec();
+  // // angle =
+  // if (run_controller_){
+  // }
+  // else {
+  //
+  // }
+  // for (size_t i=0;i<7;++i){
+  //   if (i==0){
+  //
+  //     if (run_controller_){
+  //       if (elapsed_time_ / T <= 1){
+  //         tau_d_saturated[i] = mag * (1 - std::cos(2 * M_PI / T * elapsed_time_)) / 2;
+  //       }
+  //       else tau_d_saturated[i] = 0;
+  //     }
+  //     else {
+  //       elapsed_time_ = 0;
+  //       tau_d_saturated[i] = 0;
+  //     }
+  //   }
+  //   else tau_d_saturated[i] = 0;
+  // }
+  //
+
   for (size_t i = 0; i < 7; ++i) {
     joint_handles_[i].setCommand(tau_d_saturated[i]);
   }
@@ -207,6 +240,13 @@ std::array<double, 7> JointImpedanceExampleController::saturateTorqueRate(
   }
   return tau_d_saturated;
 }
+
+void JointImpedanceExampleController::callback(const std_msgs::Bool& msg){
+  ROS_INFO("Receive running command");
+  run_controller_ = true;
+  // elapsed_time_ = 0;
+}
+
 
 }  // namespace franka_example_controllers
 
