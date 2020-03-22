@@ -32,11 +32,12 @@ def plot_torque_response(data, joint_index=0):
     N = np.min(np.array([len(tau), len(time)]))
     # print N
     plt.plot(time[:N], tau[:N])
-    # plt.plot(time[:N], taud[:N])
+    #plt.plot(time[:N], taud[:N])
 
 
-folder = "joint_1_traj"
+folder = "joint_linear_01_T1"
 data = read_data(folder)
 # print(data)
-plot_torque_response(data)
+plot_joint_response(data)
+#plot_torque_response(data)
 plt.show()
