@@ -555,8 +555,8 @@ void FrankaHW::initRobot() {
                                collision_config_.upper_force_thresholds_nominal);
 
  // set imepdance parameters
- robot_->setJointImpedance(joint_impedance_);
- robot_->setCartesianImpedance(cartesian_impedance_);
+// robot_->setJointImpedance(joint_impedance_);
+// robot_->setCartesianImpedance(cartesian_impedance_);
   update(robot_->readOnce());
 }
 

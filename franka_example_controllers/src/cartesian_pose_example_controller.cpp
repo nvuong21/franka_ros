@@ -93,11 +93,12 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
 
     // linear response
      double dev = 0.01;
-     double T = 3;
+     double T = 8;
      if (elapsed_time_ > T) elapsed_time_ = T;
      delta_x = elapsed_time_ / T * dev;
      delta_y = elapsed_time_ / T * dev;
      delta_z = elapsed_time_ / T * dev;
+     
     //
     // // trajectory tracking
 //    double radius = 0.05;

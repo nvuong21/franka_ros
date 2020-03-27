@@ -35,7 +35,7 @@ def plot_torque_response(data, joint_index=0):
     #plt.plot(time[:N], taud[:N])
 
 
-folder = "joint_linear_01_T1"
+folder = "car_linear_001_T8"
 data = read_data(folder)
 # print(data)
 plot_joint_response(data)
