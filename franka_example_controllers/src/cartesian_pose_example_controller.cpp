@@ -86,25 +86,26 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
   double delta_y{0.0};
 
   if (run_controller_){
-    // impose response
-    // delta_x = 0.0005;
-    // delta_y = 0.0005;
-    // delta_z = 0.0005;
+//     impose response
+//     delta_x = 0.0005;
+//     delta_y = 0.0005;
+//     delta_z = 0.0005;
 
     // linear response
-    // double dev = 0.01;
-    // double T = 5;
-    // if (elapsed_time_ > T) elapsed_time_ = T;
-    // delta_x = elapsed_time_ / T * dev;
-    // delta_y = elapsed_time_ / T * dev;
-    // delta_z = elapsed_time_ / T * dev;
+     double dev = 0.01;
+     double T = 8;
+     if (elapsed_time_ > T) elapsed_time_ = T;
+     delta_x = elapsed_time_ / T * dev;
+     delta_y = elapsed_time_ / T * dev;
+     delta_z = elapsed_time_ / T * dev;
+     
     //
     // // trajectory tracking
-    double radius = 0.05;
-    double angle = M_PI / 4 * (1 - std::cos(M_PI / 5.0 * elapsed_time_));
-    delta_x = radius * std::sin(angle);
-    delta_y = radius * std::sin(angle);
-    delta_z = radius * (std::cos(angle) - 1);
+//    double radius = 0.05;
+//    double angle = M_PI / 4 * (1 - std::cos(M_PI / 5.0 * elapsed_time_));
+//    delta_x = radius * std::sin(angle);
+//    delta_y = radius * std::sin(angle);
+//    delta_z = radius * (std::cos(angle) - 1);
   }
   else elapsed_time_ = 0;
 

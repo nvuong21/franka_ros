@@ -69,7 +69,7 @@ void JointPositionExampleController::starting(const ros::Time& /* time */) {
 void JointPositionExampleController::update(const ros::Time& /*time*/,
                                             const ros::Duration& period) {
   elapsed_time_ += period.toSec();
-  double goal_dif = 0.1;
+  double goal_dif = -0.1;
   double delta_angle{0.0};
 
   if (run_controller_) {
@@ -86,12 +86,12 @@ void JointPositionExampleController::update(const ros::Time& /*time*/,
     // }
 
     // linear response
-    // double T = 4;
-    // if (elapsed_time_ > T) elapsed_time_ = T;
-    // delta_angle = elapsed_time_ / T * goal_dif;
+     double T = 0.6;
+     if (elapsed_time_ > T) elapsed_time_ = T;
+     delta_angle = elapsed_time_ / T * goal_dif;
 
     // trajectory response
-    delta_angle = M_PI / 16 * (1 - std::cos(M_PI / 5.0 * elapsed_time_)) * 0.2;
+//    delta_angle = M_PI / 16 * (1 - std::cos(M_PI / 5.0 * elapsed_time_)) * 0.2;
 
   }
   else {
@@ -100,13 +100,13 @@ void JointPositionExampleController::update(const ros::Time& /*time*/,
   }
   // position_joint_handles_[0].setCommand(initial_pose_[0]-delta_angle);
 
-  // for (size_t i = 0; i < 7; ++i) {
-  //   if (i == 2) {
-  //     position_joint_handles_[i].setCommand(initial_pose_[i] - delta_angle);
-  //   } else {
-  //     position_joint_handles_[i].setCommand(initial_pose_[i]+ delta_angle);
-  //   }
-  // }
+   for (size_t i = 0; i < 7; ++i) {
+     if (i == 2) {
+       position_joint_handles_[i].setCommand(initial_pose_[i] - delta_angle);
+     } else {
+       position_joint_handles_[i].setCommand(initial_pose_[i]+ delta_angle);
+     }
+   }
 }
 
 void JointPositionExampleController::callback(const std_msgs::Bool& msg){
