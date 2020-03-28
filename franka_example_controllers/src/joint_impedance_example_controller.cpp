@@ -246,8 +246,6 @@ void JointImpedanceExampleController::callback(const std_msgs::Bool& msg){
   run_controller_ = true;
   // elapsed_time_ = 0;
 }
-
-
 }  // namespace franka_example_controllers
 
 PLUGINLIB_EXPORT_CLASS(franka_example_controllers::JointImpedanceExampleController,

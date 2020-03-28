@@ -112,7 +112,7 @@ if __name__ == "__main__":
     save_file = os.path.join(save_folder, "data.json")
     saver = StateSaver("/joint_position_example_controller/command")
     # saver = StateSaver("/cartesian_pose_example_controller/command")
-    saver = StateSaver("/joint_impedance_example_controller/command")
+    # saver = StateSaver("/joint_impedance_example_controller/command")
     saver.start_record_data()
     rospy.sleep(0.5)
     saver.start_controller()

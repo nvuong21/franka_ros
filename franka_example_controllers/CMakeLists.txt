@@ -114,6 +114,7 @@ catkin_install_python(
 include(${CMAKE_CURRENT_LIST_DIR}/../cmake/ClangTools.cmake OPTIONAL
   RESULT_VARIABLE CLANG_TOOLS
 )
+ # this is for reformatting code?
 if(CLANG_TOOLS)
   file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
   file(GLOB_RECURSE HEADERS
