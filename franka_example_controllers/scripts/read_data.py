@@ -46,8 +46,8 @@ def plot_cartesian_response(data, axis="x"):
     error = calc_ss_error(x[:N], xd[:N], t[:N])
     print("steady state error {}: {}".format(axis, error))
 
-    plt.plot(t[:N], x[:N])
-    plt.plot(t[:N], xd[:N])
+    plt.plot(t[:N], np.array(x[:N]) - np.array(xd[:N]))
+    # plt.plot(t[:N], xd[:N])
     plt.xlabel("time")
     plt.ylabel(axis)
     plt.legend([axis, axis + "d"])
@@ -84,7 +84,6 @@ def calc_ss_error(q, qd, t, length=1):
             q1.append(q[i])
             qd1.append(qd[i])
 
-<<<<<<< HEAD
     error = 0
     for i in range(len(q1)):
         error += np.abs(q1[i] - qd1[i])
@@ -102,13 +101,11 @@ plot_cartesian_response(data, axis="y")
 plt.subplot(313)
 plot_cartesian_response(data, axis="z")
 
-=======
-folder = "car_linear_001_T8"
-data = read_data(folder)
-# print(data)
-plot_joint_response(data)
-#plot_torque_response(data)
->>>>>>> 3be220a4ff3e4b7b4c72fdada765cd27c673af3e
+# folder = "car_linear_001_T8"
+# data = read_data(folder)
+# # print(data)
+# plot_joint_response(data)
+# #plot_torque_response(data)
 plt.show()
 
 # joint 4 and 5, 6 large error
