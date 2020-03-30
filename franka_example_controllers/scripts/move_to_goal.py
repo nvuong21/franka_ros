@@ -34,6 +34,6 @@ if __name__ == '__main__':
   rospy.on_shutdown(traj.stop)
   traj.add_point(goal, time)
   traj.start()
-  rospy.loginfo('Moving to %s. Will wait [%d] seconds' % (str(goal1),time))
+  rospy.loginfo('Moving to %s. Will wait [%d] seconds' % (str(goal),time))
   traj.wait(time)
   rospy.loginfo('Shuting down node')

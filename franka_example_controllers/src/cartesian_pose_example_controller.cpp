@@ -93,7 +93,7 @@ void CartesianPoseExampleController::update(const ros::Time& /* time */,
 
     // linear response
      double dev = 0.01;
-     double T = 8;
+     double T = 6;
      if (elapsed_time_ > T) elapsed_time_ = T;
      delta_x = elapsed_time_ / T * dev;
      delta_y = elapsed_time_ / T * dev;

@@ -110,14 +110,14 @@ if __name__ == "__main__":
         os.makedirs(save_folder)
 
     save_file = os.path.join(save_folder, "data.json")
-    saver = StateSaver("/joint_position_example_controller/command")
-<<<<<<< HEAD
-    # saver = StateSaver("/cartesian_pose_example_controller/command")
+#    saver = StateSaver("/joint_position_example_controller/command")
+
+#	saver = StateSaver("/cartesian_pose_example_controller/command")
     # saver = StateSaver("/joint_impedance_example_controller/command")
-=======
-#    saver = StateSaver("/cartesian_pose_example_controller/command")
+
+    saver = StateSaver("/cartesian_pose_example_controller/command")
 #    saver = StateSaver("/joint_impedance_example_controller/command")
->>>>>>> 3be220a4ff3e4b7b4c72fdada765cd27c673af3e
+
     saver.start_record_data()
     rospy.sleep(0.5)
     saver.start_controller()

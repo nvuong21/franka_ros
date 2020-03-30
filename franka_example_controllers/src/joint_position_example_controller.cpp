@@ -69,15 +69,15 @@ void JointPositionExampleController::starting(const ros::Time& /* time */) {
 void JointPositionExampleController::update(const ros::Time& /*time*/,
                                             const ros::Duration& period) {
   elapsed_time_ += period.toSec();
-  double goal_dif = -0.1;
+  double goal_dif = 0.1;
   double delta_angle{0.0};
 
   if (run_controller_) {
 
     // step response
     // delta_angle = goal_dif;
-    // for (size_t i = 0; i < 7; ++i) {
     //   if (i == 0) {
+    // for (size_t i = 0; i < 7; ++i) {
     //     position_joint_handles_[i].setCommand(initial_pose_[i] + goal_dif);
     //   }
     //   else if (i == 6){
@@ -86,7 +86,7 @@ void JointPositionExampleController::update(const ros::Time& /*time*/,
     // }
 
     // linear response
-     double T = 0.6;
+     double T = 3;
      if (elapsed_time_ > T) elapsed_time_ = T;
      delta_angle = elapsed_time_ / T * goal_dif;
 
