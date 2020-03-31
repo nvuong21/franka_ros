@@ -119,7 +119,7 @@ if __name__ == "__main__":
 #    saver = StateSaver("/joint_impedance_example_controller/command")
 
     saver.start_record_data()
-    rospy.sleep(0.5)
+    rospy.sleep(1)
     saver.start_controller()
-    rospy.sleep(5)
+    rospy.sleep(12)
     saver.save(save_file)
