@@ -557,6 +557,7 @@ void FrankaHW::initRobot() {
  // set imepdance parameters
 // robot_->setJointImpedance(joint_impedance_);
 // robot_->setCartesianImpedance(cartesian_impedance_);
+ 
   update(robot_->readOnce());
 }
 
