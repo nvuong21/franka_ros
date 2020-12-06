@@ -21,12 +21,12 @@ realtime_config: enforce
 collision_config:
   lower_torque_thresholds_acceleration: [20.0, 20.0, 18.0, 18.0, 16.0, 14.0, 12.0]  # [Nm]
   upper_torque_thresholds_acceleration: [20.0, 20.0, 18.0, 18.0, 16.0, 14.0, 12.0]  # [Nm]
-  lower_torque_thresholds_nominal: [20.0, 20.0, 18.0, 18.0, 16.0, 14.0, 12.0]  # [Nm]
-  upper_torque_thresholds_nominal: [20.0, 20.0, 18.0, 18.0, 16.0, 14.0, 12.0]  # [Nm]
-  lower_force_thresholds_acceleration: [20.0, 20.0, 20.0, 25.0, 25.0, 25.0]  # [N, N, N, Nm, Nm, Nm]
-  upper_force_thresholds_acceleration: [20.0, 20.0, 20.0, 25.0, 25.0, 25.0]  # [N, N, N, Nm, Nm, Nm]
-  lower_force_thresholds_nominal: [20.0, 20.0, 20.0, 25.0, 25.0, 25.0]  # [N, N, N, Nm, Nm, Nm]
-  upper_force_thresholds_nominal: [20.0, 20.0, 20.0, 25.0, 25.0, 25.0]  # [N, N, N, Nm, Nm, Nm]
+  lower_torque_thresholds_nominal: [28.0, 28.0, 24.0, 24.0, 22.0, 20.0, 12.0]  # [Nm]
+  upper_torque_thresholds_nominal: [28.0, 28.0, 24.0, 24.0, 22.0, 20.0, 12.0]  # [Nm]
+  lower_force_thresholds_acceleration: [30.0, 30.0, 30.0, 25.0, 25.0, 25.0]  # [N, N, N, Nm, Nm, Nm]
+  upper_force_thresholds_acceleration: [30.0, 30.0, 30.0, 25.0, 25.0, 25.0]  # [N, N, N, Nm, Nm, Nm]
+  lower_force_thresholds_nominal: [50.0, 50.0, 50.0, 30.0, 30.0, 30.0]  # [N, N, N, Nm, Nm, Nm]
+  upper_force_thresholds_nominal: [50.0, 50.0, 50.0, 30.0, 30.0, 30.0]  # [N, N, N, Nm, Nm, Nm]
 # Initial default impedance parameters of the internal controller
 joint_impedance: [3000.0, 3000.0, 3000.0, 2500.0, 2500.0, 2000.0, 2000.0]
 #joint_impedance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
